@@ -29,9 +29,9 @@ class ApiError extends BaseError {
     super(error);
     if (Errors[error.key] && Errors[error.key].name) {
       this.name = Errors[error.key].name;
+      this.message = error.message || Errors[error.key].message;
+      this.statusCode = error.statusCode || Errors[error.key].statusCode;
     }
-    this.statusCode = error.statusCode || Errors[error.key].statusCode;
-    this.message = error.message || Errors[error.key].message;
     Error.captureStackTrace(this);
   }
 
