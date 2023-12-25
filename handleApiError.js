@@ -27,11 +27,11 @@ const Errors = Object.freeze({
 class ApiError extends BaseError {
   constructor(error) {
     super(error);
-    if (Errors[error.key].name) {
-      this.message = error.message || Errors[error.key].message;
+    if (Errors[error.key] && Errors[error.key].name) {
       this.name = Errors[error.key].name;
-      this.statusCode = error.statusCode || Errors[error.key].statusCode;
     }
+    this.statusCode = error.statusCode || Errors[error.key].statusCode;
+    this.message = error.message || Errors[error.key].message;
     Error.captureStackTrace(this);
   }
 
