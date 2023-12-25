@@ -1,4 +1,4 @@
-const { statusCode } = require('./statusCode');
+const statusCode = require('./statusCode');
 
 class BaseError extends Error {
   constructor(message = 'Internal server error.') {

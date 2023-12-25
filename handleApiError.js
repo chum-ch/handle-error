@@ -1,31 +1,28 @@
 const BaseError = require('./baseError');
-const { statusCode } = require('./statusCode');
+const statusCode = require('./statusCode');
 
-const Errors = Object.freeze(
-  {
-    InputValidation: {
-      name: 'InputValidation',
-      message: 'Verify data again.',
-      statusCode: statusCode.BAD_REQUEST,
-    },
-    ResourceNotFound: {
-      name: 'ResourceNotFound',
-      message: 'Resources not found.',
-      statusCode: statusCode.NOT_FOUND,
-    },
-    MethodNotAllowed: {
-      name: 'MethodNotAllowed',
-      message: 'Method not allowed.',
-      statusCode: statusCode.NOT_ALLOWED,
-    },
-    ServerError: {
-      name: 'ServerError',
-      message: 'Internal server error.',
-      statusCode: statusCode.SERVER_ERROR,
-    },
+const Errors = Object.freeze({
+  InputValidation: {
+    name: 'InputValidation',
+    message: 'Verify data again.',
+    statusCode: statusCode.BAD_REQUEST,
   },
-
-);
+  ResourceNotFound: {
+    name: 'ResourceNotFound',
+    message: 'Resources not found.',
+    statusCode: statusCode.NOT_FOUND,
+  },
+  MethodNotAllowed: {
+    name: 'MethodNotAllowed',
+    message: 'Method not allowed.',
+    statusCode: statusCode.NOT_ALLOWED,
+  },
+  ServerError: {
+    name: 'ServerError',
+    message: 'Internal server error.',
+    statusCode: statusCode.SERVER_ERROR,
+  },
+});
 
 class ApiError extends BaseError {
   constructor(error) {
@@ -35,6 +32,7 @@ class ApiError extends BaseError {
       this.name = Errors[error.key].name;
       this.statusCode = error.statusCode || Errors[error.key].statusCode;
     }
+    Error.captureStackTrace(this);
   }
 
   static send(response, error) {
@@ -43,7 +41,9 @@ class ApiError extends BaseError {
       statusCode: error.statusCode || statusCode.SERVER_ERROR,
       message: error.message,
     };
-    response.status(error.statusCode || statusCode.SERVER_ERROR).send(errorResponse);
+    response
+      .status(error.statusCode || statusCode.SERVER_ERROR)
+      .send(errorResponse);
   }
 }
 
